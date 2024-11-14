@@ -28,14 +28,20 @@ ls *gvcf.gz > gvcf.list # This creates a text file with all the HaplotypeCalled.
 ##force create and remove an empty directory (needed to prevent errors when rerunning)
 mkdir -p ${FILENAME}_DB; rm -r ${FILENAME}_DB
 ##run GATK database import (2nd step)
-gatk GenomicsDBImport -V gvcf.list \ 
---genomicsdb-workspace-path ${FILENAME}_DB \ 
+gatk GenomicsDBImport -V gvcf.list \
+--genomicsdb-workspace-path ${FILENAME}_DB \
 --intervals NC_004029.2
 
 ##run GATK genotype GVCF (3rd step)
 gatk GenotypeGVCFs -R ../Orosv1mt.fasta \
 -V gendb://${FILENAME}_DB -O ${FILENAME}.vcf.gz
 
+##Access to PCA program SMART PCA
+export
+PATH="/projects/ec34/biosin5410/sbatch_intro/SNP_calling/script/:$PATH"
+
+##Run PCA program SMART PCA
+Run_PCA ${FILENAME}.vcf.gz
 
 ## Message that you are done with the job
 echo "Finished running jobs"
